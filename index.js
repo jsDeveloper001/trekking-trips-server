@@ -25,9 +25,26 @@ const client = new MongoClient(uri, {
 
 const run = async () => {
     try {
+
+        const TouristsSpotDB = client.db("TouristsSpotDB")
+        const TouristSpots = TouristsSpotDB.collection("TouristSpots")
+
         app.get('/', async (req, res) => {
             res.send("Express server is running");
         })
+
+        app.get('/add-tourist-spot', async (req, res) => {
+            const cursor = TouristSpots.find()
+            const AllTouristSpots = await cursor.toArray()
+            res.send(AllTouristSpots)
+        })
+
+        app.post('/add-tourist-spot', async (req, res) => {
+            const touristSpot = req.body;
+            const ConfirmAdd = await TouristSpots.insertOne(touristSpot)
+            res.send(ConfirmAdd)
+        })
+
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
