@@ -67,6 +67,17 @@ const run = async () => {
             res.send(Find);
         })
 
+        app.put("/my-list/update/:Id", async (req, res) => {
+            const Id = req.params.Id;
+            const Info = req.body;
+            const Cursor = { _id: new ObjectId(Id) };
+            const Update = {
+                $set: Info
+            };
+            const ConfirmUpdate = await TouristSpots.updateOne(Cursor, Update)
+            res.send(ConfirmUpdate)
+        })
+
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
