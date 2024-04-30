@@ -45,6 +45,21 @@ const run = async () => {
             res.send(ConfirmAdd)
         })
 
+        app.get('/user-list/:email', async (req, res) => {
+            const Email = req.params.email
+            const Cursor = { userEmail: Email }
+            const Find = TouristSpots.find(Cursor)
+            const UserList = await Find.toArray()
+            res.send(UserList)
+        })
+
+        app.delete("/user-list/:Id", async (req, res) => {
+            const Id = req.params.Id;
+            const Cursor = { _id: new ObjectId(Id) };
+            const Delete = await TouristSpots.deleteOne(Cursor);
+            res.send(Delete)
+        })
+
         app.get("/tourist-spot/:Id", async (req, res) => {
             const Id = req.params.Id;
             const Cursor = { _id: new ObjectId(Id) }
