@@ -11,7 +11,7 @@ app.use(express.json());
 
 
 // MongoDb Connection String
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DBUser}:${process.env.DBPassword}@trekking-trips.0cayigf.mongodb.net/?retryWrites=true&w=majority&appName=trekking-trips`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -33,7 +33,7 @@ const run = async () => {
             res.send("Express server is running");
         })
 
-        app.get('/add-tourist-spot', async (req, res) => {
+        app.get('/all-tourist-spot', async (req, res) => {
             const cursor = TouristSpots.find()
             const AllTouristSpots = await cursor.toArray()
             res.send(AllTouristSpots)
@@ -43,6 +43,13 @@ const run = async () => {
             const touristSpot = req.body;
             const ConfirmAdd = await TouristSpots.insertOne(touristSpot)
             res.send(ConfirmAdd)
+        })
+
+        app.get("/tourist-spot/:Id", async (req, res) => {
+            const Id = req.params.Id;
+            const Cursor = { _id: new ObjectId(Id) }
+            const Find = await TouristSpots.findOne(Cursor)
+            res.send(Find);
         })
 
 
