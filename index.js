@@ -28,6 +28,7 @@ const run = async () => {
 
         const TouristsSpotDB = client.db("TouristsSpotDB")
         const TouristSpots = TouristsSpotDB.collection("TouristSpots")
+        const Countries = TouristsSpotDB.collection("Countries")
 
         app.get('/', async (req, res) => {
             res.send("Express server is running");
@@ -78,14 +79,25 @@ const run = async () => {
             res.send(ConfirmUpdate)
         })
 
+        app.get('/country', async (req, res) => {
+            const Cursor = Countries.find()
+            const Result = await Cursor.toArray()
+            res.send(Result)
+        })
+
+        app.get('/tourist-spot/country/:countryName', async (req, res) => {
+            const countryName = req.params.countryName;
+            const Cursor = { country: countryName }
+            const Find = TouristSpots.find(Cursor)
+            const TOuristSpots = await Find.toArray()
+            res.send(TOuristSpots)
+        })
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
         console.log("You successfully connected to MongoDB!");
     }
     finally {
-        // // Ensures that the client will close when you finish/error
-        // await client.close();
     }
 }
 run().catch(console.dir);
